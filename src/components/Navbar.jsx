@@ -7,7 +7,6 @@ const links = [
   { label: "Get In Touch", to: "/contact" },
 ];
 
-/* Scramble-reveal hook */
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ01";
 function useScramble(text) {
   const [display, setDisplay] = useState(text);
@@ -94,7 +93,6 @@ export default function Navbar() {
         .nav-syne { font-family: 'Syne', sans-serif; }
         .nav-dm   { font-family: 'DM Sans', sans-serif; }
 
-        /* Noise texture overlay */
         .nav-root::before {
           content: '';
           position: absolute;
@@ -105,13 +103,11 @@ export default function Navbar() {
           border-radius: inherit;
         }
 
-        /* Scramble link base */
         .scramble-link {
           position: relative;
           transition: color 0.15s ease;
         }
 
-        /* Underline that draws in from left on hover */
         .scramble-link::after {
           content: '';
           position: absolute;
@@ -129,16 +125,14 @@ export default function Navbar() {
           transform: scaleX(1);
         }
 
-        /* Active underline always visible */
         .active-link::after {
           transform: scaleX(1) !important;
         }
 
-        .active-link .link-text  { color: #c8f04a; }
+        .active-link .link-text   { color: #c8f04a; }
         .inactive-link .link-text { color: #e8e0d0; }
         .scramble-link:hover .link-text { color: #c8f04a; }
 
-        /* Active glow dot */
         .active-dot {
           width: 4px;
           height: 4px;
@@ -154,15 +148,12 @@ export default function Navbar() {
           50%       { box-shadow: 0 0 10px #c8f04a, 0 0 24px #c8f04acc; }
         }
 
-        /* Hamburger bar */
         .ham-bar { background: #e8e0d0; }
 
-        /* Scrolled glow border */
         .nav-scrolled {
           box-shadow: 0 1px 0 rgba(200,240,74,0.15), 0 4px 32px rgba(0,0,0,0.4);
         }
 
-        /* Mobile link accent bar */
         .mobile-link-item {
           position: relative;
           overflow: hidden;
@@ -186,7 +177,7 @@ export default function Navbar() {
 
       <nav
         className={`
-          nav-root relative w-full z-50
+          nav-root sticky top-0 w-full z-50
           bg-[#111108]
           transition-all duration-300
           ${scrolled ? "nav-scrolled" : ""}
@@ -195,7 +186,6 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-5 sm:px-8" style={{ position: "relative", zIndex: 1 }}>
           <div className="flex items-center justify-between h-24 sm:h-[100px]">
 
-            {/* Logo */}
             <NavLink to="/" className="flex items-center select-none shrink-0">
               <span
                 className="nav-syne"
@@ -211,7 +201,6 @@ export default function Navbar() {
               </span>
             </NavLink>
 
-            {/* Desktop Links */}
             <ul className="hidden md:flex items-center gap-0 nav-dm">
               {links.map(({ label, to }) => (
                 <li key={to}>
@@ -220,7 +209,6 @@ export default function Navbar() {
               ))}
             </ul>
 
-            {/* Hamburger */}
             <button
               onClick={() => setOpen(o => !o)}
               aria-label="Toggle menu"
@@ -241,7 +229,6 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         <div
           className={`
             md:hidden overflow-hidden
