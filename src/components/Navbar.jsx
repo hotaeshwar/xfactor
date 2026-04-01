@@ -115,11 +115,11 @@ export default function Navbar() {
           left: 16px;
           right: 16px;
           height: 1.5px;
-          background: #c8f04a;
+          background: #1a1a1a;
           transform: scaleX(0);
           transform-origin: left center;
           transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-          box-shadow: 0 0 8px #c8f04a88;
+          box-shadow: none;
         }
         .scramble-link:hover::after {
           transform: scaleX(1);
@@ -129,29 +129,29 @@ export default function Navbar() {
           transform: scaleX(1) !important;
         }
 
-        .active-link .link-text   { color: #c8f04a; }
-        .inactive-link .link-text { color: #e8e0d0; }
-        .scramble-link:hover .link-text { color: #c8f04a; }
+        .active-link .link-text   { color: #1a1a1a; }
+        .inactive-link .link-text { color: #444444; }
+        .scramble-link:hover .link-text { color: #1a1a1a; }
 
         .active-dot {
           width: 4px;
           height: 4px;
           border-radius: 50%;
-          background: #c8f04a;
+          background: #1a1a1a;
           display: inline-block;
-          box-shadow: 0 0 6px #c8f04a, 0 0 12px #c8f04a88;
+          box-shadow: none;
           animation: dot-pulse 2s ease-in-out infinite;
           flex-shrink: 0;
         }
         @keyframes dot-pulse {
-          0%, 100% { box-shadow: 0 0 6px #c8f04a, 0 0 12px #c8f04a88; }
-          50%       { box-shadow: 0 0 10px #c8f04a, 0 0 24px #c8f04acc; }
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0.5; }
         }
 
-        .ham-bar { background: #e8e0d0; }
+        .ham-bar { background: #1a1a1a; }
 
         .nav-scrolled {
-          box-shadow: 0 1px 0 rgba(200,240,74,0.15), 0 4px 32px rgba(0,0,0,0.4);
+          box-shadow: 0 1px 0 rgba(0,0,0,0.08), 0 4px 32px rgba(0,0,0,0.08);
         }
 
         .mobile-link-item {
@@ -163,11 +163,11 @@ export default function Navbar() {
           position: absolute;
           left: 0; top: 0; bottom: 0;
           width: 3px;
-          background: #c8f04a;
+          background: #1a1a1a;
           border-radius: 0 2px 2px 0;
           transform: scaleY(0);
           transition: transform 0.25s cubic-bezier(0.16,1,0.3,1);
-          box-shadow: 0 0 8px #c8f04a88;
+          box-shadow: none;
         }
         .mobile-link-item:hover::after,
         .mobile-link-active::after {
@@ -178,7 +178,7 @@ export default function Navbar() {
       <nav
         className={`
           nav-root sticky top-0 w-full z-50
-          bg-[#111108]
+          bg-white
           transition-all duration-300
           ${scrolled ? "nav-scrolled" : ""}
         `}
@@ -192,12 +192,12 @@ export default function Navbar() {
                 style={{
                   fontSize: "1.75rem",
                   fontWeight: 800,
-                  color: "#e8e0d0",
+                  color: "#1a1a1a",
                   letterSpacing: "-0.02em",
                   lineHeight: 1,
                 }}
               >
-                X<span style={{ color: "#c8f04a" }}>factor</span>
+                X<span style={{ color: "#1a1a1a" }}>factor</span>
               </span>
             </NavLink>
 
@@ -218,12 +218,12 @@ export default function Navbar() {
                 bg-transparent border-none cursor-pointer
                 focus:outline-none select-none
                 transition-colors duration-200
-                hover:bg-[#e8e0d0]/5
+                hover:bg-black/5
               "
             >
-              <span className={`ham-bar block h-[2.5px] rounded-full transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] ${open ? "w-[22px] translate-y-[7.5px] rotate-45 bg-[#c8f04a]" : "w-[22px]"}`} />
+              <span className={`ham-bar block h-[2.5px] rounded-full transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] ${open ? "w-[22px] translate-y-[7.5px] rotate-45 bg-[#1a1a1a]" : "w-[22px]"}`} />
               <span className={`ham-bar block h-[2.5px] rounded-full transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] ${open ? "w-0 opacity-0" : "w-[16px] self-end mr-[2px]"}`} />
-              <span className={`ham-bar block h-[2.5px] rounded-full transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] ${open ? "w-[22px] -translate-y-[7.5px] -rotate-45 bg-[#c8f04a]" : "w-[22px]"}`} />
+              <span className={`ham-bar block h-[2.5px] rounded-full transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] ${open ? "w-[22px] -translate-y-[7.5px] -rotate-45 bg-[#1a1a1a]" : "w-[22px]"}`} />
             </button>
 
           </div>
@@ -237,7 +237,7 @@ export default function Navbar() {
           `}
           style={{ position: "relative", zIndex: 1 }}
         >
-          <div className="bg-[#161610] border-t border-[#c8f04a]/10 px-5 pb-6 pt-3">
+          <div className="bg-white border-t border-black/10 px-5 pb-6 pt-3">
             <ul className="nav-dm flex flex-col gap-1">
               {links.map(({ label, to }, i) => (
                 <li
@@ -252,8 +252,8 @@ export default function Navbar() {
                       `mobile-link-item ${isActive ? "mobile-link-active" : ""} flex items-center justify-between px-4 py-3 rounded-xl text-[0.95rem]
                        transition-colors duration-200
                        ${isActive
-                         ? "text-[#c8f04a] bg-[#c8f04a]/8"
-                         : "text-[#e8e0d0] hover:bg-[#e8e0d0]/5 hover:text-[#c8f04a]"
+                         ? "text-[#1a1a1a] bg-black/5"
+                         : "text-[#444444] hover:bg-black/5 hover:text-[#1a1a1a]"
                        }`
                     }
                     style={{ fontWeight: 800 }}
@@ -261,7 +261,7 @@ export default function Navbar() {
                     {({ isActive }) => (
                       <>
                         <span>{label}</span>
-                        {isActive && <span className="w-2 h-2 rounded-full bg-[#c8f04a] shadow-[0_0_8px_#c8f04a]" />}
+                        {isActive && <span className="w-2 h-2 rounded-full bg-[#1a1a1a]" />}
                       </>
                     )}
                   </NavLink>
