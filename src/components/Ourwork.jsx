@@ -146,10 +146,6 @@ const caseStudies = [
   },
 ];
 
-// ── detect mobile ─────────────────────────────────────────────────────────────
-const isMobile = () =>
-  typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
-
 // ── VideoCard ─────────────────────────────────────────────────────────────────
 function VideoCard({ video, onOpen, isPlaying, cardIndex }) {
   const cardRef  = useRef(null);
@@ -176,26 +172,10 @@ function VideoCard({ video, onOpen, isPlaying, cardIndex }) {
     return () => obs.disconnect();
   }, [cardIndex]);
 
-  // ── FIX: play/pause with mobile-safe retry ──
   useEffect(() => {
     const v = videoRef.current;
     if (!v || !visible) return;
-
-    if (isPlaying) {
-      // readyState check prevents NotAllowedError on iOS before any interaction
-      const tryPlay = () => {
-        v.muted = true; // ensure muted — required for autoplay on mobile
-        v.play().catch(() => {});
-      };
-      if (v.readyState >= 2) {
-        tryPlay();
-      } else {
-        v.addEventListener("canplay", tryPlay, { once: true });
-        return () => v.removeEventListener("canplay", tryPlay);
-      }
-    } else {
-      v.pause();
-    }
+    isPlaying ? v.play().catch(() => {}) : v.pause();
   }, [visible, isPlaying]);
 
   return (
@@ -259,15 +239,7 @@ function VideoModal({ video, onClose }) {
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    // ── FIX: muted + playsInline required for modal autoplay on mobile ──
-    const v = videoRef.current;
-    if (v) {
-      v.muted = false; // allow sound in modal since user tapped intentionally
-      v.play().catch(() => {
-        v.muted = true; // fallback: if sound blocked, play muted
-        v.play().catch(() => {});
-      });
-    }
+    videoRef.current?.play().catch(() => {});
     const esc = (e) => { if (e.key === "Escape") handleClose(); };
     window.addEventListener("keydown", esc);
     return () => { document.body.style.overflow = ""; window.removeEventListener("keydown", esc); };
@@ -292,6 +264,7 @@ function VideoModal({ video, onClose }) {
         className="relative flex flex-col items-center"
         style={{ animation: closing ? "scOut .32s ease forwards" : "scIn .32s ease forwards" }}
       >
+        {/* video container with close button inside */}
         <div
           className="relative rounded-2xl overflow-hidden"
           style={{
@@ -300,17 +273,10 @@ function VideoModal({ video, onClose }) {
             boxShadow: "0 0 60px 20px rgba(30,174,200,0.35)",
           }}
         >
-          {/* ── FIX: added webkit-playsinline for older iOS ── */}
-          <video
-            ref={videoRef}
-            src={video.src}
-            controls
-            loop
-            playsInline
-            webkit-playsinline="true"
-            className="w-full h-full object-cover"
-          />
+          <video ref={videoRef} src={video.src} controls loop playsInline
+            className="w-full h-full object-cover" />
 
+          {/* close button — inside top-right of the video, always visible */}
           <button
             onClick={handleClose}
             className="absolute top-3 right-3 w-10 h-10 rounded-full border-2 border-[#1eaec8] flex items-center justify-center text-white hover:bg-[#1eaec8]/30 transition-colors z-20"
@@ -331,6 +297,7 @@ function VideoModal({ video, onClose }) {
           </button>
         </div>
 
+        {/* caption below */}
         <div className="mt-5 text-center">
           <span className="block text-[11px] font-bold tracking-[0.2em] text-[#1eaec8] uppercase">{video.tag}</span>
           <span className="block text-xl font-extrabold text-white mt-1">{video.label}</span>
@@ -388,6 +355,7 @@ function AccordionItem({ cs, index, isOpen, onToggle }) {
         overflow: "hidden",
       }}
     >
+      {/* ── header / trigger ── */}
       <button
         onClick={onToggle}
         className="w-full flex items-center justify-between px-6 md:px-8 py-5 md:py-6 text-left"
@@ -413,6 +381,7 @@ function AccordionItem({ cs, index, isOpen, onToggle }) {
           </div>
         </div>
 
+        {/* +/× icon */}
         <div
           className="flex-shrink-0 w-9 h-9 rounded-full border-2 flex items-center justify-center"
           style={{
@@ -429,6 +398,7 @@ function AccordionItem({ cs, index, isOpen, onToggle }) {
         </div>
       </button>
 
+      {/* ── body ── */}
       {everOpen && (
         <div
           style={{
@@ -491,9 +461,7 @@ export default function OurWork() {
   const [modal, setModal]     = useState(null);
   const [hovered, setHovered] = useState(false);
 
-  // ── FIX: on mobile, never pause carousel videos via hovered state ──
-  const mobile = isMobile();
-  const isPlaying = mobile ? !modal : (!hovered && !modal);
+  const isPlaying = !hovered && !modal;
 
   useEffect(() => {
     const track = trackRef.current;
@@ -527,6 +495,7 @@ export default function OurWork() {
   return (
     <section className="w-full bg-[#f0ede8] py-16 md:py-24 overflow-hidden">
 
+      {/* ── Section heading ── */}
       <div className="px-6 md:px-16 mb-10 md:mb-14">
         <p className="flex items-center gap-2 text-[11px] font-bold tracking-[0.22em] text-[#1eaec8] uppercase mb-4">
           <span className="w-2 h-2 rounded-full bg-[#1eaec8] inline-block" />
@@ -540,6 +509,7 @@ export default function OurWork() {
         <div className="mt-4 w-12 h-[3px] bg-[#1eaec8] rounded-full" />
       </div>
 
+      {/* ── Auto-scrolling carousel ── */}
       <div
         ref={trackRef}
         className="flex gap-5 md:gap-6 px-4 md:px-8 overflow-x-hidden pb-4"
@@ -560,6 +530,7 @@ export default function OurWork() {
         ))}
       </div>
 
+      {/* ── Case Studies ── */}
       <div className="px-6 md:px-16 mt-20 md:mt-28">
         <p className="flex items-center gap-2 text-[11px] font-bold tracking-[0.22em] text-[#1eaec8] uppercase mb-4">
           <span className="w-2 h-2 rounded-full bg-[#1eaec8] inline-block" />
@@ -574,6 +545,7 @@ export default function OurWork() {
         <CaseStudiesAccordion />
       </div>
 
+      {/* ── Modal ── */}
       {modal && (
         <VideoModal
           video={modal}
